@@ -1,0 +1,48 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  
+  <!-- servletcontainer가 먼저 뜬 후 servletapplication에 spring을 연동(contextloader, dispatcherservlet)  -->
+  <!-- 스프링 부트는 springapplication이 먼저 뜬 후, 그 안에서 tomcat이 내장서버로 뜬 다. -> 내장 톰캣안에 서블릿을 코드로 등록(스프링 app안에 톰캣이 들어간 구조)  -->
+  
+  <!-- filter보다 먼저 설정 되어야한다. -->
+  <!-- me.dh.AppConfig를 이용하여 AnnotationConfigWebApplicationContext생성 -->
+  <context-param>
+  	<param-name>contextClass</param-name>
+  	<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>me.dh.AppConfig</param-value>
+  </context-param>
+  
+  <!-- spring이 제공해 주는 applicationcontext를 만들어서 servletcontext에 등록(servletContext에 등록 / servletContext -> 공용으로 모든 servlet이 사용할 수 있는 저장소) -> servlet의 라이프사이클에 맞춰서 동작 -->
+  <!-- servlet이 application context를 사용할 수 있도록 --> 
+  <!-- ContextLoaderListener가 servlet을 등록해준다. -> root context가 된다. -->
+  <!-- ContextLoaderListener없이 dispatcherservlet으로만 context를 만들 수 도 있다. -> componentscan을 전 범위로 하여 -> 반대의 경우도 가능 -->
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+	
+  <servlet>
+  	<servlet-name>app</servlet-name>
+  	<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  	<init-param>
+  		<!-- annotation 기반으로 context 검색 -->
+  		<param-name>contextClass</param-name>
+  		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>contextConfigLocation</param-name>
+  		<param-value>me.dh.WebConfig</param-value>
+  	</init-param>
+  </servlet>
+  
+  <servlet-mapping>
+  		<servlet-name>app</servlet-name>
+  		<url-pattern>/app/*</url-pattern>
+  </servlet-mapping>
+</web-app>

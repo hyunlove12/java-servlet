@@ -1,0 +1,51 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  
+  <!-- filter보다 먼저 설정 되어야한다. -->
+  <!-- me.dh.AppConfig를 이용하여 AnnotationConfigWebApplicationContext생성 -->
+  <context-param>
+  	<param-name>contextClass</param-name>
+  	<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>me.dh.AppConfig</param-value>
+  </context-param>
+  
+  <filter>
+  	<filter-name>myFilter</filter-name>
+  	<filter-class>me.dh.MyFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>myFilter</filter-name>
+  	<servlet-name>hello</servlet-name>
+  </filter-mapping>
+  
+  <!-- listener 클래스 --> 
+  <!-- 
+  <listener>
+  	<listener-class>me.dh.MyListener</listener-class>
+  </listener> -->
+  
+  <!-- spring이 제공해 주는 applicationcontext를 만들어서 servletcontext에 등록(servletContext에 등록 / servletContext -> 공용으로 모든 servlet이 사용할 수 있는 저장소) -> servlet의 라이프사이클에 맞춰서 동작 -->
+  <!-- servlet이 application context를 사용할 수 있도록 --> 
+  <!-- ContextLoaderListener가 servlet을 등록해준다. -> root context가 된다. -->
+  <listener>
+  	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  
+  <servlet>
+  	<servlet-name>hello</servlet-name>
+  	<servlet-class>me.dh.HelloServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>hello</servlet-name>
+  	<url-pattern>/hello</url-pattern>
+  </servlet-mapping>
+</web-app>
